@@ -1,11 +1,13 @@
 ﻿using Caliburn.Micro;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using Wpf.ReferenceArchitecture.Core;
+using Wpf.CaliburnMicro.Core;
+using Wpf.CaliburnMicro.ViewModels.Login;
 
-namespace Wpf.ReferenceArchitecture.ViewModels;
+namespace Wpf.CaliburnMicro.ViewModels;
 
-public class RootViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<string>
+public class RootViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<LoginStateChanged>
 {
     private string? _message;
     public string? Message
@@ -19,23 +21,59 @@ public class RootViewModel : Conductor<IScreen>.Collection.OneActive, IHandle<st
 
     public string WindowTitle => "WPF Reference Architecture";
 
-    private IFactory<LoginViewModel> _loginFactory; 
+    private readonly IEventAggregator _eventAggregator;
+    private IFactory<LoginViewModel> _loginFactory;
+    private IFactory<MainAppViewModel> _mainFactory;
 
-    public RootViewModel(IFactory<LoginViewModel> loginFactory)
+    public RootViewModel(IEventAggregator eventAggregator,
+        IFactory<LoginViewModel> loginFactory,
+        IFactory<MainAppViewModel> mainFactory)
     {
+        _eventAggregator = eventAggregator;
         _loginFactory = loginFactory;
+        _mainFactory = mainFactory;
+
+        _eventAggregator.SubscribeOnUIThread(this);
     }
 
     protected override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        await ActivateItemAsync(_loginFactory.Create(), cancellationToken);
+        await ShowLogin(cancellationToken);
+        //await ActivateItemAsync(new TestImageViewModel(), cancellationToken);
     }
 
-
-
-    public Task HandleAsync(string message, CancellationToken cancellationToken)
+    private async Task ShowLogin(CancellationToken cancellationToken)
     {
-        //this.Message = message.ToString();
-        return Task.CompletedTask;
+        if (cancellationToken.IsCancellationRequested) return;
+
+        var loginScreen = _loginFactory.Create();
+        if (loginScreen is null) Debugger.Break();
+
+        await ActivateItemAsync(loginScreen!, cancellationToken);
+    }
+
+    private async Task ShowMain(LoginInfo loginInfo, CancellationToken cancellationToken)
+    {
+        if (cancellationToken.IsCancellationRequested) return;
+
+        var mainAppScreen = _mainFactory.Create(m => m.TrySetLoginInfo(loginInfo));
+        if (mainAppScreen is null) Debugger.Break();
+
+        await ActivateItemAsync(mainAppScreen!, cancellationToken);
+    }
+
+    public async Task HandleAsync(LoginStateChanged stateChanged, CancellationToken cancellationToken)
+    {
+        if (stateChanged.LoginInfo?.CurrentState is LoginState.NotLoggedIn)
+        {
+            await ShowLogin(cancellationToken);
+        }
+        else if (stateChanged.LoginInfo?.CurrentState is LoginState.LoggedIn)
+        {
+            await ShowMain(stateChanged.LoginInfo, cancellationToken);
+        }
+
+        if (stateChanged.LoginInfo?.CurrentState is not LoginState.LoggedIn) return;
+
     }
 }

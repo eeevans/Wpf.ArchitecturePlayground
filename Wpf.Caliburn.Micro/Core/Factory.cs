@@ -1,12 +1,12 @@
-﻿using Caliburn.Micro;
-using Lamar;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Lamar;
+using System;
 
-namespace Wpf.ReferenceArchitecture.Core;
+namespace Wpf.CaliburnMicro.Core;
 
 public interface IFactory<T> where T : class
 {
-    T Create();
+    T? Create();
+    T? Create(Action<T> initAction);
 }
 
 public class Factory<T> : IFactory<T> where T : class
@@ -15,28 +15,20 @@ public class Factory<T> : IFactory<T> where T : class
 
     public Factory(IContainer container)
     {
-        this._container = container;
+        _container = container;
     }
 
-    public T Create()
+    public T? Create(Action<T> initAction)
     {
-        return _container.GetService<T>() as T;
+        T instance = _container.GetInstance<T>();
+        initAction(instance);
+        return instance;
     }
 
-}
-
-public class CaliburnFactory<T> : IFactory<T> where T : class
-{
-    private readonly SimpleContainer _container;
-
-    public CaliburnFactory(SimpleContainer container)
+    public T? Create()
     {
-        this._container = container;
-    }
-
-    public T Create()
-    {
-        return _container.GetInstance<T>() as T;
+        _container.GetInstance<T>();
+        return _container.GetInstance<T>() as T; // .GetService<T>() as T;
     }
 
 }

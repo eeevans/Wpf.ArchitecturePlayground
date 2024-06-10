@@ -5,10 +5,11 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Windows;
-using Wpf.ReferenceArchitecture.Core;
-using Wpf.ReferenceArchitecture.ViewModels;
+using Wpf.CaliburnMicro.Core;
+using Wpf.CaliburnMicro.ViewModels;
 
-namespace Wpf.ReferenceArchitecture.Bootstrap;
+namespace Wpf.CaliburnMicro.Bootstrap;
+
 internal class LamarBootstrapper : BootstrapperBase
 {
     private IContainer container;
@@ -23,10 +24,12 @@ internal class LamarBootstrapper : BootstrapperBase
     {
         container = new Container(c =>
         {
-            c.For<IWindowManager>().Use<WindowManager>();
+            c.ForSingletonOf<IWindowManager>().Use<WindowManager>();
+            c.ForSingletonOf<IEventAggregator>().Use<EventAggregator>();
             c.For(typeof(IFactory<>)).Use(typeof(Factory<>));
             c.AddTransient<RootViewModel>();
             c.AddTransient<LoginViewModel>();
+            c.AddTransient<MainAppViewModel>();
         });
         Console.WriteLine(container.WhatDoIHave());
 
@@ -44,13 +47,13 @@ internal class LamarBootstrapper : BootstrapperBase
 
     protected override IEnumerable<object>? GetAllInstances(Type service)
     {
-        return container.GetAllInstances(service) as IEnumerable<Object>;
+        return container.GetAllInstances(service) as IEnumerable<object>;
     }
 
     protected override void BuildUp(object instance)
     {
-        Scope scope = container as Scope;
-        scope.BuildUp(instance);
+        if (container is Scope scope)
+            scope.BuildUp(instance);
     }
 
 }

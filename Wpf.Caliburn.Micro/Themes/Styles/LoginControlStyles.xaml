@@ -1,0 +1,120 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks">
+    <!--BorderStyles.Xaml-->
+    <Style x:Key="DefaultBorder" TargetType="Border">
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="CornerRadius" Value="6"/>
+    </Style>
+
+    <Style x:Key="BorderStyle" 
+           TargetType="{x:Type Border}"
+           BasedOn="{StaticResource DefaultBorder}">
+        <Setter Property="Background" Value="{DynamicResource WindowActiveBorderBrush}"/>
+        <Setter Property="Width"  Value="300"/>
+        <Setter Property="Height" Value="400"/>
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect BlurRadius="15"
+                              Direction ="-90" 
+                              RenderingBias ="Quality" 
+                              ShadowDepth ="2" 
+                              Color ="Gray" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--ButtonStyle.xaml-->
+    <Style x:Key="LoginButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="250"/>
+        <Setter Property="Height" Value="35"/>
+        <Setter Property="Margin" Value="0,25"/>
+        <Setter Property="Content" Value="Login"/>
+        <Setter Property="Background" Value="Black"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="LoginBorder" 
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="16">
+                        <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                      VerticalAlignment="Center"/>
+                            <iconPacks:PackIconMaterial Kind="LoginVariant" 
+                                                Width="16"
+                                                Height="16"
+                                                Margin="10,0"
+                                                VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="AliceBlue" TargetName="LoginBorder"  />
+                            <Setter Property="TextBlock.Foreground" Value="Black"  TargetName="LoginBorder" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--TextBlockStyle.xaml-->
+    <Style x:Key="DefaultTextBlock" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Margin" Value="0,15"/>
+    </Style>
+
+    <Style x:Key="SignUpTextBlock" 
+           TargetType="TextBlock" 
+           BasedOn="{StaticResource DefaultTextBlock}">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Bottom"/>
+        <Setter Property="Margin" Value="0,5" />
+    </Style>
+
+    <Style x:Key="LoginTextBlock" 
+           TargetType="TextBlock">
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="FontSize" Value="25" />
+        <Setter Property="Padding" Value="10" />
+    </Style>
+
+    <!--TextBoxStyle.xaml-->
+    <Style x:Key="LoginTextBox" TargetType="TextBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Width" Value="255"/>
+        <Setter Property="Padding" Value="0,5"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border BorderBrush="White"
+                        BorderThickness="0,0,0,1">
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Left">
+                            <iconPacks:PackIconModern Width="16"
+                                        Height="16"
+                                        Margin="0,5,10,10"
+                                        Kind="User" />
+                            <TextBox Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Path=Text}"
+                                     Width="255"
+                                     BorderThickness="0"/>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="LoginPasswordBox" TargetType="PasswordBox">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Width" Value="255"/>
+        <Setter Property="Padding" Value="0,5"/>
+        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    </Style>
+</ResourceDictionary>

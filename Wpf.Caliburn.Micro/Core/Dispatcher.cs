@@ -5,7 +5,8 @@ using System.Windows.Threading;
 
 namespace Wpf.ReferenceArchitecture.Core;
 
-internal static class DispatcherService{
+internal static class DispatcherService
+{
     public static void Invoke(Action action)
     {
         Dispatcher dispatchObject = Application.Current.Dispatcher;

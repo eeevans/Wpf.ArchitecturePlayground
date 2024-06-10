@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Interop;
 using Wpf.ReferenceArchitecture.Core;
 
-namespace Wpf.ReferenceArchitecture.Views;
+namespace Wpf.CaliburnMicro.Views;
 
 /// <summary>
 /// Interaction logic for MainWindow.xaml
@@ -16,45 +16,45 @@ public partial class RootView : Window
     {
         InitializeComponent();
         RefreshMaximizeRestoreButton();
-        this.Loaded += (e, o) =>
+        Loaded += (e, o) =>
         {
-            this.RestoredWindowState = this.WindowState;
+            RestoredWindowState = WindowState;
         };
     }
 
     private void OnMinimizeButtonClick(object sender, RoutedEventArgs e)
     {
-        this.WindowState = WindowState.Minimized;
+        WindowState = WindowState.Minimized;
     }
 
     private void OnMaximizeRestoreButtonClick(object sender, RoutedEventArgs e)
     {
-        if (this.WindowState == WindowState.Maximized)
+        if (WindowState == WindowState.Maximized)
         {
-            this.WindowState = WindowState.Normal;
+            WindowState = WindowState.Normal;
         }
         else
         {
-            this.WindowState = WindowState.Maximized;
+            WindowState = WindowState.Maximized;
         }
     }
 
     private void OnCloseButtonClick(object sender, RoutedEventArgs e)
     {
-        this.Close();
+        Close();
     }
 
     private void RefreshMaximizeRestoreButton()
     {
-        if (this.WindowState == WindowState.Maximized)
+        if (WindowState == WindowState.Maximized)
         {
-            this.maximizeButton.Visibility = Visibility.Collapsed;
-            this.restoreButton.Visibility = Visibility.Visible;
+            maximizeButton.Visibility = Visibility.Collapsed;
+            restoreButton.Visibility = Visibility.Visible;
         }
         else
         {
-            this.maximizeButton.Visibility = Visibility.Visible;
-            this.restoreButton.Visibility = Visibility.Collapsed;
+            maximizeButton.Visibility = Visibility.Visible;
+            restoreButton.Visibility = Visibility.Collapsed;
         }
     }
 
@@ -62,19 +62,19 @@ public partial class RootView : Window
     {
         DispatcherService.BeginInvoke(() =>
         {
-            this.Show();
-            this.WindowState = this.RestoredWindowState;
+            Show();
+            WindowState = RestoredWindowState;
         });
     }
 
     private void Window_StateChanged(object sender, EventArgs e)
     {
-        if (this.WindowState == WindowState.Maximized || this.WindowState == WindowState.Normal)
+        if (WindowState == WindowState.Maximized || WindowState == WindowState.Normal)
         {
-            this.RestoredWindowState = this.WindowState;
+            RestoredWindowState = WindowState;
         }
 
-        this.RefreshMaximizeRestoreButton();
+        RefreshMaximizeRestoreButton();
     }
 
     protected override void OnSourceInitialized(EventArgs e)

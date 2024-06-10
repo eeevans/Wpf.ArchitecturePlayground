@@ -1,11 +1,11 @@
 ﻿using Caliburn.Micro;
+using System;
 using System.Collections.Generic;
 using System.Windows;
-using System;
-using Wpf.ReferenceArchitecture.ViewModels;
-using Wpf.ReferenceArchitecture.Core;
+using Wpf.CaliburnMicro.Core;
+using Wpf.CaliburnMicro.ViewModels;
 
-namespace Wpf.ReferenceArchitecture.Bootstrap;
+namespace Wpf.CaliburnMicro.Bootstrap;
 internal class SimpleContainerBootstrapper : BootstrapperBase
 {
     private SimpleContainer container;
@@ -15,7 +15,7 @@ internal class SimpleContainerBootstrapper : BootstrapperBase
         Initialize();
     }
 
-    
+
     protected override void Configure()
     {
         container = new SimpleContainer();
@@ -28,8 +28,9 @@ internal class SimpleContainerBootstrapper : BootstrapperBase
         container.PerRequest<LoginViewModel>();
         container.RegisterPerRequest(typeof(IFactory<LoginViewModel>), null, typeof(CaliburnFactory<LoginViewModel>));
         var t = container.GetInstance<IFactory<LoginViewModel>>();
-        if (t != null) { 
-            Console.WriteLine("nope"); 
+        if (t != null)
+        {
+            Console.WriteLine("nope");
         }
     }
 
